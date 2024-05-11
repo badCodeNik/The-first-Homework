@@ -2,33 +2,43 @@ using UnityEngine;
 
 namespace MediatorExample.Scripts
 {
-    public class LevelManager : MonoBehaviour
+    public class Level : MonoBehaviour
     {
-        private int _level;
-        private int _lastLevel;
-        private int _hp;
-        private int _exp;
-        private int _levelTreshold = 10;
+        [SerializeField] private int pointsPerLevel = 200;
+        [SerializeField] private int interval = 1;
+        private float _timer;
+        private int _experiencePoints;
 
-        private void Start()
+        private void Update()
         {
-            _level = 1;
-        }
+            _timer -= Time.deltaTime;
 
-        private void FixedUpdate()
-        {
-            if (Input.GetKeyDown(KeyCode.A)) _exp++;
-        }
-
-        private void LevelUp()
-        {
-            if (_exp >= _levelTreshold)
+            if (_timer <= 0)
             {
-                _level++;
-                _levelTreshold += _level;
+                GainExperience(20);
+                _timer += interval;
             }
+            Debug.Log(GetLevel());
         }
-        
-        private void ResetLevel
+
+        private void GainExperience(int exp)
+        {
+            _experiencePoints += exp;
+        }
+
+        public void ResetLevel()
+        {
+            _experiencePoints = 0;
+        }
+
+        public float GetExperience()
+        {
+            return _experiencePoints;
+        }
+
+        public int GetLevel()
+        {
+             return _experiencePoints / pointsPerLevel;
+        }
     }
 }
